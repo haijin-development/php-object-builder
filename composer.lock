@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "68b337ffc0ededb00dbb589633e962ae",
+    "content-hash": "3a940693c53f4a2fd07be0aa024130d7",
     "packages": [
         {
             "name": "haijin/tools",

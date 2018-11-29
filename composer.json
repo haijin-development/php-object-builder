@@ -19,6 +19,22 @@
             "php": "7.1"
         }
     },
+    "repositories": {
+        "haijin/testing": {
+            "type": "path",
+            "url": "../php-testing",
+            "options": {
+            "symlink": true
+            }
+        },
+        "haijin/tools": {
+            "type": "path",
+            "url": "../php-tools",
+            "options": {
+            "symlink": true
+            }
+        }
+    },
     "require": {
         "haijin/tools": "^0.0.1"
     },
