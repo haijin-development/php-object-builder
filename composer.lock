@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3a940693c53f4a2fd07be0aa024130d7",
+    "content-hash": "f52245d0dafbe56c6d0fd63278cfff55",
     "packages": [
         {
             "name": "haijin/tools",
-            "version": "0.0.1",
+            "version": "0.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/haijin-development/php-tools.git",
-                "reference": "9a17825b7608f2dacb6754b0d8df94c8ea904f69"
+                "reference": "9bac53b2de73c9f8b0a0690b0447749a3e5e8ddf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/haijin-development/php-tools/zipball/9a17825b7608f2dacb6754b0d8df94c8ea904f69",
-                "reference": "9a17825b7608f2dacb6754b0d8df94c8ea904f69",
+                "url": "https://api.github.com/repos/haijin-development/php-tools/zipball/9bac53b2de73c9f8b0a0690b0447749a3e5e8ddf",
+                "reference": "9bac53b2de73c9f8b0a0690b0447749a3e5e8ddf",
                 "shasum": ""
             },
             "require-dev": {
@@ -53,7 +53,7 @@
                 "path",
                 "utilities"
             ],
-            "time": "2018-11-27T23:52:10+00:00"
+            "time": "2018-11-29T22:00:25+00:00"
         }
     ],
     "packages-dev": [
