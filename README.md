@@ -23,7 +23,6 @@ If you like it a lot you may contribute by financing its development. Please con
     2. [Building objects](#c-2-2)
     3. [Reusing builders](#c-2-3)
 3. [Running the tests](#c-3)
-4. [Generating the api documentation](#c-4)
 
 <a name="c-1"></a>
 ## Installation
