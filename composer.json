@@ -20,7 +20,7 @@
         }
     },
     "require": {
-        "haijin/tools": "^0.0.2"
+        "haijin/tools": "^0.0.3"
     },
     "require-dev": {
         "phpunit/phpunit": "^7.4",
