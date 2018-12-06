@@ -154,7 +154,7 @@ class ObjectBuilder implements \ArrayAccess
             $closure = $params[0];
         }
 
-        if( ! is_callable( $params[-1] ) && $params[-1] != null ) {
+        if( ! is_callable( $params[-1] ) && $params[-1] !== null ) {
             $binding = $params[-1];
         } else {
             $binding = $this->binding;
@@ -186,7 +186,7 @@ class ObjectBuilder implements \ArrayAccess
 
     public function _build($target, $value, $closure, $binding)
     {
-        $this->target = $target == null ? [] : $target;
+        $this->target = $target === null ? [] : $target;
         $this->value = $value;
         $this->binding = $binding;
 
@@ -234,7 +234,7 @@ class ObjectBuilder implements \ArrayAccess
 
     public function offsetSet($offset, $value)
     {
-        if( $offset == null ) {
+        if( $offset === null ) {
             $offset = count( $this->target );
         }
 

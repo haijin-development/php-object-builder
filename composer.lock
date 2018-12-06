@@ -4,24 +4,24 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f52245d0dafbe56c6d0fd63278cfff55",
+    "content-hash": "9f3fe4f729d15a5ee3a3f467a62cbef4",
     "packages": [
         {
             "name": "haijin/tools",
-            "version": "0.0.2",
+            "version": "0.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/haijin-development/php-tools.git",
-                "reference": "9bac53b2de73c9f8b0a0690b0447749a3e5e8ddf"
+                "reference": "86b52f5cb3eb90e6458944fb73fbead4098fafe9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/haijin-development/php-tools/zipball/9bac53b2de73c9f8b0a0690b0447749a3e5e8ddf",
-                "reference": "9bac53b2de73c9f8b0a0690b0447749a3e5e8ddf",
+                "url": "https://api.github.com/repos/haijin-development/php-tools/zipball/86b52f5cb3eb90e6458944fb73fbead4098fafe9",
+                "reference": "86b52f5cb3eb90e6458944fb73fbead4098fafe9",
                 "shasum": ""
             },
             "require-dev": {
-                "haijin/testing": "^0.0.1",
+                "haijin/testing": "^0.0.2",
                 "phpunit/phpunit": "^7.4"
             },
             "type": "library",
@@ -53,7 +53,7 @@
                 "path",
                 "utilities"
             ],
-            "time": "2018-11-29T22:00:25+00:00"
+            "time": "2018-12-06T15:59:33+00:00"
         }
     ],
     "packages-dev": [
@@ -113,16 +113,16 @@
         },
         {
             "name": "haijin/testing",
-            "version": "0.0.1",
+            "version": "0.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/haijin-development/php-testing.git",
-                "reference": "1d931c0b68fcff9bf22e8632d811ffd123740af4"
+                "reference": "ebbb4325d40a5a4f448fe66169e8ce57f3a95223"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/haijin-development/php-testing/zipball/1d931c0b68fcff9bf22e8632d811ffd123740af4",
-                "reference": "1d931c0b68fcff9bf22e8632d811ffd123740af4",
+                "url": "https://api.github.com/repos/haijin-development/php-testing/zipball/ebbb4325d40a5a4f448fe66169e8ce57f3a95223",
+                "reference": "ebbb4325d40a5a4f448fe66169e8ce57f3a95223",
                 "shasum": ""
             },
             "require-dev": {
@@ -154,7 +154,7 @@
                 "phpunit",
                 "testing"
             ],
-            "time": "2018-11-27T22:29:40+00:00"
+            "time": "2018-12-06T15:38:17+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -775,16 +775,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "7.4.4",
+            "version": "7.4.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "b1be2c8530c4c29c3519a052c9fb6cee55053bbd"
+                "reference": "61d34e8dd6eb3555900f0f2a2fa9e7e570730102"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/b1be2c8530c4c29c3519a052c9fb6cee55053bbd",
-                "reference": "b1be2c8530c4c29c3519a052c9fb6cee55053bbd",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/61d34e8dd6eb3555900f0f2a2fa9e7e570730102",
+                "reference": "61d34e8dd6eb3555900f0f2a2fa9e7e570730102",
                 "shasum": ""
             },
             "require": {
@@ -805,7 +805,7 @@
                 "phpunit/php-timer": "^2.0",
                 "sebastian/comparator": "^3.0",
                 "sebastian/diff": "^3.0",
-                "sebastian/environment": "^3.1 || ^4.0",
+                "sebastian/environment": "^4.0",
                 "sebastian/exporter": "^3.1",
                 "sebastian/global-state": "^2.0",
                 "sebastian/object-enumerator": "^3.0.3",
@@ -855,7 +855,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2018-11-14T16:52:02+00:00"
+            "time": "2018-12-03T05:01:24+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",

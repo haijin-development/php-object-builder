@@ -2,7 +2,7 @@
     "name": "haijin/object-builder",
     "description": "One direction serializers for complex objects using a simple DSL.",
     "keywords": ["serializer", "converter", "json"],
-    "version": "0.0.1",
+    "version": "0.0.2",
     "type": "library",
     "license": "MIT",
     "homepage": "https://github.com/haijin-development/php-object-builder",
@@ -20,11 +20,11 @@
         }
     },
     "require": {
-        "haijin/tools": "^0.0.3"
+        "haijin/tools": "^0.0.4"
     },
     "require-dev": {
         "phpunit/phpunit": "^7.4",
-        "haijin/testing": "^0.0.1"
+        "haijin/testing": "^0.0.2"
     },
     "autoload": {
         "psr-4": {

@@ -43,7 +43,7 @@ class JsonBuilder extends ObjectBuilder
 
     public function _build($target, $value, $closure, $binding)
     {
-        if( $target == null ) {
+        if( $target === null ) {
             $target = [];
         }
 

@@ -7,7 +7,7 @@ One direction serializers of complex objects using a simple DSL.
 [![Build Status](https://travis-ci.com/haijin-development/php-object-builder.svg?branch=v0.0.2)](https://travis-ci.com/haijin-development/php-object-builder)
 [![License](https://poser.pugx.org/haijin/object-builder/license)](https://packagist.org/packages/haijin/object-builder)
 
-### Version 0.0.1
+### Version 0.0.2
 
 This library is under active development and no stable version was released yet.
 
@@ -35,7 +35,7 @@ Include this library in your project `composer.json` file:
 
     "require": {
         ...
-        "haijin/object-builder": "^0.0.1",
+        "haijin/object-builder": "^0.0.2",
         ...
     },
 
