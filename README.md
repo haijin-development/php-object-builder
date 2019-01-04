@@ -4,7 +4,7 @@ One direction serializers of complex objects using a simple DSL.
 
 [![Latest Stable Version](https://poser.pugx.org/haijin/object-builder/version)](https://packagist.org/packages/haijin/object-builder)
 [![Latest Unstable Version](https://poser.pugx.org/haijin/object-builder/v/unstable)](https://packagist.org/packages/haijin/object-builder)
-[![Build Status](https://travis-ci.com/haijin-development/php-object-builder.svg?branch=v0.0.2)](https://travis-ci.com/haijin-development/php-object-builder)
+[![Build Status](https://travis-ci.org/haijin-development/php-object-builder.svg?branch=v0.0.2)](https://travis-ci.org/haijin-development/php-object-builder)
 [![License](https://poser.pugx.org/haijin/object-builder/license)](https://packagist.org/packages/haijin/object-builder)
 
 ### Version 0.0.2
