@@ -337,5 +337,5 @@ $object = ObjectBuilder::build_object( function($obj) use($user) {
 ## Running the tests
 
 ```
-composer test
+composer specs
 ```

@@ -4,21 +4,20 @@ namespace BuildingObjectsTest;
 
 use Haijin\ObjectBuilder\ObjectBuilder;
 
-class BuildingObjectsTest extends \PHPUnit\Framework\TestCase
-{
-    use \Haijin\Testing\AllExpectationsTrait;
+$spec->describe( "When building objects", function() {
 
-    public function testBuildAnEmptyObject()
-    {
+    $this->it( "builds an empty object", function() {
+
         $user = ObjectBuilder::build_object( function($obj) {
             $obj->target = new User();
         });
 
-        $this->assertEquals( true, is_a( $user, 'BuildingObjectsTest\User' ) );
-    }
+        $this->expect( $user ) ->to() ->be() ->a( 'BuildingObjectsTest\User' );
 
-    public function testAddAttributesToBuiltObject()
-    {
+    });
+
+    $this->it( "adds attributes to the built object", function() {
+
         $user = ObjectBuilder::build_object( function($obj) {
             $obj->target = new User();
 
@@ -26,14 +25,15 @@ class BuildingObjectsTest extends \PHPUnit\Framework\TestCase
             $obj->set_last_name( "Simpson" );
         });
 
-        $this->expectObjectToBeLike( $user, [
+        $this->expect( $user ) ->to() ->be() ->exactly_like([
             "get_name()" => "Lisa",
             "get_last_name()" => "Simpson",
         ]);
-    }
 
-    public function testAddNestedAttributesToBuiltObject()
-    {
+    });
+
+    $this->it( "adds nested attributes to the built object", function() {
+
         $user = ObjectBuilder::build_object( function($obj) {
             $obj->target = new User();
 
@@ -50,7 +50,7 @@ class BuildingObjectsTest extends \PHPUnit\Framework\TestCase
             );
         });
 
-        $this->expectObjectToBeLike( $user, [
+        $this->expect( $user ) ->to() ->be() ->exactly_like([
             "get_name()" => "Lisa",
             "get_last_name()" => "Simpson",
             "get_address()" => [
@@ -58,8 +58,10 @@ class BuildingObjectsTest extends \PHPUnit\Framework\TestCase
                 "get_number()" => 742
             ]
         ]);
-    }
-}
+
+    });
+
+});
 
 class Address
 {

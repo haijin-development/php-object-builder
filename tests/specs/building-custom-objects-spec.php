@@ -4,12 +4,10 @@ namespace CustomObjectBuildersTest;
 
 use Haijin\ObjectBuilder\ObjectBuilder;
 
-class CustomObjectBuildersTest extends \PHPUnit\Framework\TestCase
-{
-    use \Haijin\Testing\AllExpectationsTrait;
+$spec->describe( "When building custom objects", function() {
 
-    public function testBuildWithObjectBuilderInstance()
-    {
+    $this->it( "builds the object with an ObjectBuilder instance", function() {
+
         $source = [ "Lisa", "Simpson", [ "Evergreen", "742" ] ];
 
         $object = ObjectBuilder::build_object( function($obj) use($source) {
@@ -21,17 +19,18 @@ class CustomObjectBuildersTest extends \PHPUnit\Framework\TestCase
             $obj->address = $this->build_with( new AddressBuilder(), $source[2] );
         });
 
-        $this->expectObjectToBeLike( $object, [
+        $this->expect( $object ) ->to() ->be() ->exactly_like([
             "name" => "Lisa",
             "last_name" => "Simpson",
             "address" => [
                 "street" => "Evergreen 742"
             ]
         ]);
-    }
 
-    public function testBuildWithObjectBuilderClass()
-    {
+    });
+
+    $this->it( "builds the object with an ObjectBuilder class", function() {
+
         $source = [ "Lisa", "Simpson", [ "Evergreen", "742" ] ];
 
         $object = ObjectBuilder::build_object( function($obj) use($source) {
@@ -43,17 +42,18 @@ class CustomObjectBuildersTest extends \PHPUnit\Framework\TestCase
             $obj->address = $this->build_with( "CustomObjectBuildersTest\AddressBuilder", $source[2] );
         });
 
-        $this->expectObjectToBeLike( $object, [
+        $this->expect( $object ) ->to() ->be() ->exactly_like([
             "name" => "Lisa",
             "last_name" => "Simpson",
             "address" => [
                 "street" => "Evergreen 742"
             ]
         ]);
-    }
 
-    public function testBuildWithObjectBuilderConverterMethod()
-    {
+    });
+
+    $this->it( "builds the object with an ObjectBuilder converter method class", function() {
+
         $source = [ "Lisa", "Simpson", [ "Evergreen", "742" ] ];
 
         $object = (new AppObjectBuilder() )->build( function($obj) use($source) {
@@ -65,15 +65,17 @@ class CustomObjectBuildersTest extends \PHPUnit\Framework\TestCase
             $obj->address = $this->convert( $source[2] ) ->to_address();
         });
 
-        $this->expectObjectToBeLike( $object, [
+        $this->expect( $object ) ->to() ->be() ->exactly_like([
             "name" => "Lisa",
             "last_name" => "Simpson",
             "address" => [
                 "street" => "Evergreen 742"
             ]
         ]);
-    }
-}
+
+    });
+
+});
 
 class AddressBuilder extends ObjectBuilder
 {

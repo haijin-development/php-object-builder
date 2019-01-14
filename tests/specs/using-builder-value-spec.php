@@ -2,12 +2,10 @@
 
 use Haijin\ObjectBuilder\ObjectBuilder;
 
-class UsingBuilderValueTestTest extends \PHPUnit\Framework\TestCase
-{
-    use \Haijin\Testing\AllExpectationsTrait;
+$spec->describe( "When building arrays", function() {
 
-    public function testPassingValues()
-    {
+    $this->it( "passing values", function() {
+
         $source = [ "Lisa", "Simpson", [ "Evergreen", "742" ] ];
 
         $object = ObjectBuilder::build_object( $source, function($obj) {
@@ -23,12 +21,14 @@ class UsingBuilderValueTestTest extends \PHPUnit\Framework\TestCase
             });
         });
 
-        $this->expectObjectToBeLike( $object, [
+        $this->expect( $object ) ->to() ->be() ->exactly_like([
             "name" => "Lisa",
             "last_name" => "Simpson",
             "address" => [
                 "street" => "Evergreen 742"
             ]
         ]);
-    }
-}
+
+    });
+
+});

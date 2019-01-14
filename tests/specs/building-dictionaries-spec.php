@@ -2,21 +2,20 @@
 
 use Haijin\ObjectBuilder\ObjectBuilder;
 
-class BuildingDictionariesTest extends \PHPUnit\Framework\TestCase
-{
-    use \Haijin\Testing\AllExpectationsTrait;
+$spec->describe( "When building dictionaries", function() {
 
-    public function testBuildAnEmptyObject()
-    {
+    $this->it( "builds an empty object", function() {
+
         $object = ObjectBuilder::build_object( function($obj) {
             $obj->target = [];
         });
 
-        $this->assertEquals( [], $object );
-    }
+        $this->expect( $object ) ->to() ->equal( [] );
 
-    public function testAddAttributesToBuiltObject()
-    {
+    });
+
+    $this->it( "adds attributes to built object", function() {
+
         $object = ObjectBuilder::build_object( function($obj) {
             $obj->target = [];
 
@@ -24,14 +23,15 @@ class BuildingDictionariesTest extends \PHPUnit\Framework\TestCase
             $obj->last_name = "Simpson";
         });
 
-        $this->expectObjectToBeLike( $object, [
+        $this->expect( $object ) ->to() ->be() ->exactly_like([
             "name" => "Lisa",
             "last_name" => "Simpson",
         ]);
-    }
 
-    public function testBuilNestedObjects()
-    {
+    });
+
+    $this->it( "builds nested objects", function() {
+
         $object = ObjectBuilder::build_object( function($obj) {
             $obj->target = [];
 
@@ -45,17 +45,18 @@ class BuildingDictionariesTest extends \PHPUnit\Framework\TestCase
             });
         });
 
-        $this->expectObjectToBeLike( $object, [
+        $this->expect( $object ) ->to() ->be() ->exactly_like([
             "name" => "Lisa",
             "last_name" => "Simpson",
             "address" => [
                 "street" => "Evergreen 742"
             ]
         ]);
-    }
 
-    public function testBuilObjectsFromSource()
-    {
+    });
+
+    $this->it( "builds objects from a source object", function() {
+
         $source = [ "Lisa", "Simpson", [ "Evergreen", "742" ] ];
 
         $object = ObjectBuilder::build_object( function($obj) use($source) {
@@ -72,12 +73,14 @@ class BuildingDictionariesTest extends \PHPUnit\Framework\TestCase
             });
         });
 
-        $this->expectObjectToBeLike( $object, [
+        $this->expect( $object ) ->to() ->be() ->exactly_like([
             "name" => "Lisa",
             "last_name" => "Simpson",
             "address" => [
                 "street" => "Evergreen 742"
             ]
         ]);
-    }
-}
+
+    });
+
+});

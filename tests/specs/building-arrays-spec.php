@@ -2,21 +2,20 @@
 
 use Haijin\ObjectBuilder\ObjectBuilder;
 
-class BuildingArraysTest extends \PHPUnit\Framework\TestCase
-{
-    use \Haijin\Testing\AllExpectationsTrait;
+$spec->describe( "When building arrays", function() {
 
-    public function testBuildAnEmptyArray()
-    {
+    $this->it( "builds an empty array", function() {
+
         $array = ObjectBuilder::build_object( function($array) {
             $array->target = [];
         });
 
-        $this->assertEquals( [], $array );
-    }
+        $this->expect( $array ) ->to() ->equal( [] );
 
-    public function testAddAttributesToBuiltObject()
-    {
+    });
+
+    $this->it( "adds items to the array", function() {
+
         $array = ObjectBuilder::build_object( function($array) {
             $array->target = [];
 
@@ -24,11 +23,15 @@ class BuildingArraysTest extends \PHPUnit\Framework\TestCase
             $array[] = "Simpson";
         });
 
-        $this->assertEquals( [ "Lisa", "Simpson" ], $array );
-    }
+        $this->expect( $array ) ->to() ->be() ->exactly_like([
+            "Lisa",
+            "Simpson"
+        ]);
 
-    public function testBuilNestedArrays()
-    {
+    });
+
+    $this->it( "builds nested arrays", function() {
+
         $array = ObjectBuilder::build_object( function($array) {
             $array->target = [];
 
@@ -42,11 +45,18 @@ class BuildingArraysTest extends \PHPUnit\Framework\TestCase
             });
         });
 
-        $this->assertEquals( [ "Lisa", "Simpson", [ "Evergreen", "742" ] ], $array );
-    }
+        $this->expect( $array ) ->to() ->be() ->exactly_like([
+            "Lisa",
+            "Simpson",
+            [ 
+                "Evergreen", "742"
+            ] 
+        ]);
 
-    public function testBuilArraysFromSource()
-    {
+    });
+
+    $this->it( "builds arrays from a source object", function() {
+
         $user = [
             "name" => "Lisa",
             "last_name" => "Simpson",
@@ -72,6 +82,14 @@ class BuildingArraysTest extends \PHPUnit\Framework\TestCase
             });
         });
 
-        $this->assertEquals( [ "Lisa", "Simpson", [ "Evergreen", "742" ] ], $array );
-    }
-}
+        $this->expect( $array ) ->to() ->be() ->exactly_like([
+            "Lisa",
+            "Simpson",
+            [ 
+                "Evergreen", "742"
+            ] 
+        ]);
+
+    });
+
+});

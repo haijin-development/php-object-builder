@@ -2,19 +2,15 @@
 
 namespace JsonBuilderIntegrationTest;
 
-use Haijin\Tools\OrderedCollection;
+$spec->describe( "When building arrays", function() {
 
-class JsonBuilderIntegrationTest extends \PHPUnit\Framework\TestCase
-{
-    use \Haijin\Testing\AllExpectationsTrait;
+    $this->it( "Integration", function() {
 
-    public function testIntegration()
-    {
         $action = new Action();
 
         $json = $action->get_json();
 
-        $this->expectObjectToBeLike( $json, [
+        $this->expect( $json ) ->to() ->be() ->exactly_like([
             "response" => [
                 "api_version" => "1.0.0",
                 "success" => true,
@@ -25,15 +21,19 @@ class JsonBuilderIntegrationTest extends \PHPUnit\Framework\TestCase
                         "addresses" => [
                             [
                                 "street" => 'Evergreen',
-                                "number" => function($value) { $this->assertSame( 742, $value ); }
+                                "number" => function($value) {
+                                    $this->expect( $value ) ->to() ->be( "===" ) ->than( 742 );
+                                }
                             ]
                         ]
                     ]
                 ]
             ]
         ]);
-    }
-}
+
+    });
+
+});
 
 class Address
 {

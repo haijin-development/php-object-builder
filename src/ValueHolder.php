@@ -43,5 +43,5 @@ class ValueHolder
         $arguments = array_merge( [ $this->value], $arguments );
 
         return $this->object_builder->$method_name( ... $arguments );
-    }   
+    }
 }
