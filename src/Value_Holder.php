@@ -1,10 +1,11 @@
 <?php
 
-namespace Haijin\ObjectBuilder;
+namespace Haijin\Object_Builder;
 
 /**
  * This class is an artifact to improve the expressiveness of the ObjectBuilders.
- * It delegates calls from ->to_something() to this object into ->to_something( $value ) into the ObjectBuilder.
+ * It delegates calls from ->to_something() to this object into ->to_something( $value ) into
+ * the Object_Builder.
  *
  * Example:
  *
@@ -14,15 +15,15 @@ namespace Haijin\ObjectBuilder;
  *          $obj->address = $this->convert( $user->get_address() ) ->to_address();
  *      });
  */
-class ValueHolder
+class Value_Holder
 {
     protected $object_builder;
 
     /**
-     * Initializes the ValueHolder object.
+     * Initializes the Value_Holder object.
      *
-     * @param object $value The value to be passed back as a parameter to the ObjectBuilder.
-     * @param ObjectBuilder $object_builder The ObjectBuilder that created $this ValueHolder.
+     * @param object $value The value to be passed back as a parameter to the Object_Builder.
+     * @param Object_Builder $object_builder The Object_Builder that created $this Value_Holder.
      */
     public function __construct($value, $object_builder)
     {
@@ -31,10 +32,10 @@ class ValueHolder
     }
 
     /**
-     * Delegates all methods back to the ObjectBuilder passing $this->value as the first parameter.
+     * Delegates all methods back to the Object_Builder passing $this->value as the first parameter.
      *
-     * @param string $method_name The name of the method to delegate to the ObjectBuilder.
-     * @param array $arguments An array of arguments to pass to the delegated method in the ObjectBuilder.
+     * @param string $method_name The name of the method to delegate to the Object_Builder.
+     * @param array $arguments An array of arguments to pass to the delegated method in the Object_Builder.
      *
      * @return The converted value.
      */

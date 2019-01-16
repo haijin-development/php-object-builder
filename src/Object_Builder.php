@@ -1,8 +1,8 @@
 <?php
 
-namespace Haijin\ObjectBuilder;
+namespace Haijin\Object_Builder;
 
-class ObjectBuilder implements \ArrayAccess
+class Object_Builder implements \ArrayAccess
 {
     //// Class methods
 
@@ -11,7 +11,7 @@ class ObjectBuilder implements \ArrayAccess
      *
      * Example:
      *
-     *      $object = ObjectBuilder::build_object( function($obj) {
+     *      $object = Object_Builder::build_object( function($obj) {
      *          $obj->target = [];
      *
      *          $obj->name = "Lisa";
@@ -55,7 +55,7 @@ class ObjectBuilder implements \ArrayAccess
     /// Initializing
 
     /**
-     * Initializes this ObjectBuilder.
+     * Initializes this Object_Builder.
      */
     public function __construct()
     {
@@ -71,7 +71,7 @@ class ObjectBuilder implements \ArrayAccess
      *
      * @param object $binding An object to be the default binding for closure evaluations.
      *
-     * @return ObjectBuilder Returns $this object.
+     * @return Object_Builder Returns $this object.
      */
     public function set_binding($binding)
     {
@@ -141,12 +141,12 @@ class ObjectBuilder implements \ArrayAccess
      */
     public function build( ... $params )
     {
-        $params = \Haijin\Tools\OrderedCollection::with_all( $params );
+        $params = \Haijin\Ordered_Collection::with_all( $params );
         $value = null;
         $closure = null;
         $binding = null;
 
-        if( ! is_callable( $params[0] ) ) {
+        if( ! ( $params[0] instanceof \Closure ) ) {
             $value = $params[0];
             $closure = $params[1];
         } else {
@@ -154,7 +154,7 @@ class ObjectBuilder implements \ArrayAccess
             $closure = $params[0];
         }
 
-        if( ! is_callable( $params[-1] ) && $params[-1] !== null ) {
+        if( ! ( $params[-1] instanceof \Closure ) && $params[-1] !== null ) {
             $binding = $params[-1];
         } else {
             $binding = $this->binding;
@@ -166,10 +166,10 @@ class ObjectBuilder implements \ArrayAccess
     }
 
     /**
-     * Builds and returns an object using a custom ObjectBuilder class or instance.
+     * Builds and returns an object using a custom Object_Builder class or instance.
      *
-     * @param string|ObjectBuilder $object_builder The class or instance of the ObjectBuilder.
-     * @param ... $params The list of parameters to pass along to the method call( ...$params ) of the ObjectBuilder.
+     * @param string|Object_Builder $object_builder The class or instance of the Object_Builder.
+     * @param ... $params The list of parameters to pass along to the method call( ...$params ) of the Object_Builder.
      *
      * @return object The build object.
      */
@@ -201,7 +201,7 @@ class ObjectBuilder implements \ArrayAccess
     //}
 
     /**
-     * Creates and returns a ValueHolder wrapper on a value to later call a conversion method.
+     * Creates and returns a Value_Holder wrapper on a value to later call a conversion method.
      *
      * Example:
      *
@@ -213,11 +213,11 @@ class ObjectBuilder implements \ArrayAccess
      *
      * @param object $value The value to be convereted.
      *
-     * @return ValueHolder A wrapper that accepts conversion methods. See the example.
+     * @return Value_Holder A wrapper that accepts conversion methods. See the example.
      */
     public function convert( $value )
     {
-        return new ValueHolder( $value, $this );
+        return new Value_Holder( $value, $this );
     }
 
     /// ArrayAccess implementation

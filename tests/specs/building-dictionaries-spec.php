@@ -1,12 +1,12 @@
 <?php
 
-use Haijin\ObjectBuilder\ObjectBuilder;
+use Haijin\Object_Builder\Object_Builder;
 
 $spec->describe( "When building dictionaries", function() {
 
     $this->it( "builds an empty object", function() {
 
-        $object = ObjectBuilder::build_object( function($obj) {
+        $object = Object_Builder::build_object( function($obj) {
             $obj->target = [];
         });
 
@@ -16,7 +16,7 @@ $spec->describe( "When building dictionaries", function() {
 
     $this->it( "adds attributes to built object", function() {
 
-        $object = ObjectBuilder::build_object( function($obj) {
+        $object = Object_Builder::build_object( function($obj) {
             $obj->target = [];
 
             $obj->name = "Lisa";
@@ -32,7 +32,7 @@ $spec->describe( "When building dictionaries", function() {
 
     $this->it( "builds nested objects", function() {
 
-        $object = ObjectBuilder::build_object( function($obj) {
+        $object = Object_Builder::build_object( function($obj) {
             $obj->target = [];
 
             $obj->name = "Lisa";
@@ -59,7 +59,7 @@ $spec->describe( "When building dictionaries", function() {
 
         $source = [ "Lisa", "Simpson", [ "Evergreen", "742" ] ];
 
-        $object = ObjectBuilder::build_object( function($obj) use($source) {
+        $object = Object_Builder::build_object( function($obj) use($source) {
             $obj->target = [];
 
             $obj->name = $source[ 0 ];

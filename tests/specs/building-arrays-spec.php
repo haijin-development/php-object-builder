@@ -1,12 +1,12 @@
 <?php
 
-use Haijin\ObjectBuilder\ObjectBuilder;
+use Haijin\Object_Builder\Object_Builder;
 
 $spec->describe( "When building arrays", function() {
 
     $this->it( "builds an empty array", function() {
 
-        $array = ObjectBuilder::build_object( function($array) {
+        $array = Object_Builder::build_object( function($array) {
             $array->target = [];
         });
 
@@ -16,7 +16,7 @@ $spec->describe( "When building arrays", function() {
 
     $this->it( "adds items to the array", function() {
 
-        $array = ObjectBuilder::build_object( function($array) {
+        $array = Object_Builder::build_object( function($array) {
             $array->target = [];
 
             $array[] = "Lisa";
@@ -32,7 +32,7 @@ $spec->describe( "When building arrays", function() {
 
     $this->it( "builds nested arrays", function() {
 
-        $array = ObjectBuilder::build_object( function($array) {
+        $array = Object_Builder::build_object( function($array) {
             $array->target = [];
 
             $array[] = "Lisa";
@@ -65,7 +65,7 @@ $spec->describe( "When building arrays", function() {
             ]
         ];
 
-        $array = ObjectBuilder::build_object( function($array) use($user) {
+        $array = Object_Builder::build_object( function($array) use($user) {
             $array->target = [];
 
             $array[] = $user[ "name" ];

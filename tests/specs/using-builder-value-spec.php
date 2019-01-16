@@ -1,6 +1,6 @@
 <?php
 
-use Haijin\ObjectBuilder\ObjectBuilder;
+use Haijin\Object_Builder\Object_Builder;
 
 $spec->describe( "When building arrays", function() {
 
@@ -8,7 +8,7 @@ $spec->describe( "When building arrays", function() {
 
         $source = [ "Lisa", "Simpson", [ "Evergreen", "742" ] ];
 
-        $object = ObjectBuilder::build_object( $source, function($obj) {
+        $object = Object_Builder::build_object( $source, function($obj) {
             $obj->target = [];
 
             $obj->name = $obj->value[ 0 ];

@@ -1,11 +1,11 @@
 <?php
 
-namespace Haijin\ObjectBuilder;
+namespace Haijin\Object_Builder;
 
 /**
- * An ObjectBuilder subclass to build JSON objects.
+ * An Object_Builder subclass to build JSON objects.
  */
-class JsonBuilder extends ObjectBuilder
+class Json_Builder extends Object_Builder
 {
     //// Class methods
 
@@ -14,7 +14,7 @@ class JsonBuilder extends ObjectBuilder
      *
      * Example:
      *
-     *      $json = JsonBuilder::build_json( function($json) {
+     *      $json = Json_Builder::build_json( function($json) {
      *          $json->target = [];
      *
      *          $json->name = "Lisa";
@@ -57,7 +57,7 @@ class JsonBuilder extends ObjectBuilder
      *
      * Example:
      *
-     *      $json = JsonBuilder::->build_json( function($json) {
+     *      $json = Json_Builder::->build_json( function($json) {
      *          $json->target = [];
      *
      *          $json->number = $json->convert( "123" ) ->to_int();
@@ -65,7 +65,7 @@ class JsonBuilder extends ObjectBuilder
      *
      *      // or
      *
-     *      $json = JsonBuilder::->build_json( function($json) {
+     *      $json = Json_Builder::->build_json( function($json) {
      *          $json->target = [];
      *
      *          $json->number = $json->to_int( "123" );
@@ -85,7 +85,7 @@ class JsonBuilder extends ObjectBuilder
      *
      * Example:
      *
-     *      $json = JsonBuilder::->build_json( function($json) {
+     *      $json = Json_Builder::->build_json( function($json) {
      *          $json->target = [];
      *
      *          $json->number = $json->convert( 123 ) ->to_string();
@@ -93,7 +93,7 @@ class JsonBuilder extends ObjectBuilder
      *
      *      // or
      *
-     *      $json = JsonBuilder::->build_json( function($json) {
+     *      $json = Json_Builder::->build_json( function($json) {
      *          $json->target = [];
      *
      *          $json->number = $json->to_string( 123 );

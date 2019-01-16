@@ -1,24 +1,24 @@
 <?php
 
-namespace BuildingObjectsTest;
+namespace Building_Objects_Spec;
 
-use Haijin\ObjectBuilder\ObjectBuilder;
+use Haijin\Object_Builder\Object_Builder;
 
 $spec->describe( "When building objects", function() {
 
     $this->it( "builds an empty object", function() {
 
-        $user = ObjectBuilder::build_object( function($obj) {
+        $user = Object_Builder::build_object( function($obj) {
             $obj->target = new User();
         });
 
-        $this->expect( $user ) ->to() ->be() ->a( 'BuildingObjectsTest\User' );
+        $this->expect( $user ) ->to() ->be() ->a( 'Building_Objects_Spec\User' );
 
     });
 
     $this->it( "adds attributes to the built object", function() {
 
-        $user = ObjectBuilder::build_object( function($obj) {
+        $user = Object_Builder::build_object( function($obj) {
             $obj->target = new User();
 
             $obj->set_name( "Lisa" );
@@ -34,7 +34,7 @@ $spec->describe( "When building objects", function() {
 
     $this->it( "adds nested attributes to the built object", function() {
 
-        $user = ObjectBuilder::build_object( function($obj) {
+        $user = Object_Builder::build_object( function($obj) {
             $obj->target = new User();
 
             $obj->set_name( "Lisa" );

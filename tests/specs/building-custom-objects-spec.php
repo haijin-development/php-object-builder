@@ -1,22 +1,22 @@
 <?php
 
-namespace CustomObjectBuildersTest;
+namespace Custom_Object_Builders_Spec;
 
-use Haijin\ObjectBuilder\ObjectBuilder;
+use Haijin\Object_Builder\Object_Builder;
 
 $spec->describe( "When building custom objects", function() {
 
-    $this->it( "builds the object with an ObjectBuilder instance", function() {
+    $this->it( "builds the object with an Object_Builder instance", function() {
 
         $source = [ "Lisa", "Simpson", [ "Evergreen", "742" ] ];
 
-        $object = ObjectBuilder::build_object( function($obj) use($source) {
+        $object = Object_Builder::build_object( function($obj) use($source) {
             $obj->target = [];
 
             $obj->name = "Lisa";
             $obj->last_name = "Simpson";
 
-            $obj->address = $this->build_with( new AddressBuilder(), $source[2] );
+            $obj->address = $this->build_with( new Address_Builder(), $source[2] );
         });
 
         $this->expect( $object ) ->to() ->be() ->exactly_like([
@@ -29,17 +29,17 @@ $spec->describe( "When building custom objects", function() {
 
     });
 
-    $this->it( "builds the object with an ObjectBuilder class", function() {
+    $this->it( "builds the object with an Object_Builder class", function() {
 
         $source = [ "Lisa", "Simpson", [ "Evergreen", "742" ] ];
 
-        $object = ObjectBuilder::build_object( function($obj) use($source) {
+        $object = Object_Builder::build_object( function($obj) use($source) {
             $obj->target = [];
 
             $obj->name = "Lisa";
             $obj->last_name = "Simpson";
 
-            $obj->address = $this->build_with( "CustomObjectBuildersTest\AddressBuilder", $source[2] );
+            $obj->address = $this->build_with( "Custom_Object_Builders_Spec\Address_Builder", $source[2] );
         });
 
         $this->expect( $object ) ->to() ->be() ->exactly_like([
@@ -52,11 +52,11 @@ $spec->describe( "When building custom objects", function() {
 
     });
 
-    $this->it( "builds the object with an ObjectBuilder converter method class", function() {
+    $this->it( "builds the object with an Object_Builder converter method class", function() {
 
         $source = [ "Lisa", "Simpson", [ "Evergreen", "742" ] ];
 
-        $object = (new AppObjectBuilder() )->build( function($obj) use($source) {
+        $object = (new App_Object_Builder() )->build( function($obj) use($source) {
             $obj->target = [];
 
             $obj->name = "Lisa";
@@ -77,7 +77,7 @@ $spec->describe( "When building custom objects", function() {
 
 });
 
-class AddressBuilder extends ObjectBuilder
+class Address_Builder extends Object_Builder
 {
     public function evaluate($source)
     {
@@ -87,7 +87,7 @@ class AddressBuilder extends ObjectBuilder
     }
 }
 
-class AppObjectBuilder extends ObjectBuilder
+class App_Object_Builder extends Object_Builder
 {
     public function to_address( $source )
     {

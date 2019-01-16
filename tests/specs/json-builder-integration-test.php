@@ -1,6 +1,6 @@
 <?php
 
-namespace JsonBuilderIntegrationTest;
+namespace Json_Builder_Integration_Spec;
 
 $spec->describe( "When building arrays", function() {
 
@@ -66,7 +66,7 @@ class User
     }
 }
 
-use Haijin\ObjectBuilder\JsonBuilder;
+use Haijin\Object_Builder\Json_Builder;
 
 class Action
 {
@@ -79,7 +79,7 @@ class Action
 
     protected function build_json_from($user)
     {
-        return JsonBuilder::build_json( function($json) use($user) {
+        return Json_Builder::build_json( function($json) use($user) {
 
             $json->response = $this->success_response_to_json( $json, $user );
 

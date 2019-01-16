@@ -1,15 +1,15 @@
-# Haijin ObjectBuilder
+# Haijin Object_Builder
 
 One direction serializers of complex objects using a simple DSL.
 
 [![Latest Stable Version](https://poser.pugx.org/haijin/object-builder/version)](https://packagist.org/packages/haijin/object-builder)
 [![Latest Unstable Version](https://poser.pugx.org/haijin/object-builder/v/unstable)](https://packagist.org/packages/haijin/object-builder)
-[![Build Status](https://travis-ci.org/haijin-development/php-object-builder.svg?branch=v0.0.2)](https://travis-ci.org/haijin-development/php-object-builder)
+[![Build Status](https://travis-ci.org/haijin-development/php-object-builder.svg?branch=v0.1.0)](https://travis-ci.org/haijin-development/php-object-builder)
 [![License](https://poser.pugx.org/haijin/object-builder/license)](https://packagist.org/packages/haijin/object-builder)
 
-### Version 0.0.2
+### Version 0.1.0
 
-This library is under active development and no stable version was released yet.
+This is the pre-release of version v1.0.0.
 
 If you like it a lot you may contribute by [financing](https://github.com/haijin-development/support-haijin-development) its development.
 
@@ -17,7 +17,7 @@ If you like it a lot you may contribute by [financing](https://github.com/haijin
 
 1. [Installation](#c-1)
 2. [ObjectBuilders](#c-2)
-    1. [JsonBuilder](#c-2-1)
+    1. [Json_Builder](#c-2-1)
         1. [Standalone example](#c-2-1-1)
         2. [Integrating it to a class](#c-2-1-2)
     2. [Building objects](#c-2-2)
@@ -35,7 +35,7 @@ Include this library in your project `composer.json` file:
 
     "require": {
         ...
-        "haijin/object-builder": "^0.0.2",
+        "haijin/object-builder": "^0.1.0",
         ...
     },
 
@@ -46,7 +46,7 @@ Include this library in your project `composer.json` file:
 <a name="c-2"></a>
 ## ObjectBuilders
 
-An ObjectBuilder is an object that serializes complex nested objects using simple DSL instead of configurations files or classes.
+An Object_Builder is an object that serializes complex nested objects using simple DSL instead of configurations files or classes.
 
 The serialization is one way only because it usually involves loss of information. Consider the case where an application returns objects modeled in a database to a json API response. Not all the fields in the model will be included in the response. Internal id fields will be skipped. Other fields may depend on the role of the user making the request. Some value types may be converted, etc.
 
@@ -54,15 +54,15 @@ On the other hand, some fields will be added to the response that may not be par
 
 
 <a name="c-2-1"></a>
-### JsonBuilder
+### Json_Builder
 
-An ObjectBuilder subclass that builds a JSON.
+An Object_Builder subclass that builds a JSON.
 
 <a name="c-2-1-1"></a>
 #### Standalone example
 
 ```php
-$json_object = \Haijin\ObjectBuilder\JsonBuilder::build_json( function($json) use($user) {
+$json_object = \Haijin\Object_Builder\Json_Builder::build_json( function($json) use($user) {
     $json->name = $user->get_name();
 
     $json->last_name = $user->get_last_name();
@@ -175,10 +175,10 @@ And an Action class that serializes a SampleUser object to produce the response
 ]
 ```
 
-integrate the JsonBuilder and factorize its building block like this:
+integrate the Json_Builder and factorize its building block like this:
 
 ```php
-use Haijin\ObjectBuilder\JsonBuilder;
+use Haijin\Object_Builder\Json_Builder;
 
 class Action
 {
@@ -193,7 +193,7 @@ class Action
 
     protected function build_json_from($user)
     {
-        return JsonBuilder::build_json( function($json) use($user) {
+        return Json_Builder::build_json( function($json) use($user) {
 
             $json->response = $this->success_response_to_json( $json, $user );
 
@@ -247,12 +247,12 @@ In this method call, note the last parameter to the `build_json` call.
 
 `$this` is passed as the last parameter to bind it to the `Action` object in all the closure evaluations.
 
-If this last parameter was not passed, inside the closures `$this` would point to the ObjectBuilder object and not to the Action object, and calling other methods in the Action class would produce an error.
+If this last parameter was not passed, inside the closures `$this` would point to the Object_Builder object and not to the Action object, and calling other methods in the Action class would produce an error.
 
 ```php
 protected function build_json_from($user)
 {
-    return JsonBuilder::build_json( function($json) use($user) {
+    return Json_Builder::build_json( function($json) use($user) {
 
         $json->response = $this->success_response_to_json( $json, $user );
 
@@ -266,7 +266,7 @@ protected function build_json_from($user)
 Build objects of any class by defining the appropiate `target` and using its own protocol:
 
 ```php
-$user = ObjectBuilder::build_object( function($obj) {
+$user = Object_Builder::build_object( function($obj) {
     $obj->target = new User();
 
     $obj->set_name( "Lisa" );
@@ -292,10 +292,10 @@ $obj->target = new User();
 <a name="c-2-3"></a>
 ### Reusing builders
 
-Reuse common builders into ObjectBuilder subclasses:
+Reuse common builders into Object_Builder subclasses:
 
 ```php
-class AddressBuilder extends ObjectBuilder
+class AddressBuilder extends Object_Builder
 {
     public function evaluate($address)
     {
@@ -309,7 +309,7 @@ class AddressBuilder extends ObjectBuilder
 and use them:
 
 ```php
-$object = ObjectBuilder::build_object( function($obj) use($user) {
+$object = Object_Builder::build_object( function($obj) use($user) {
     $obj->target = [];
 
     $obj->name = $user->get_name();
@@ -322,7 +322,7 @@ $object = ObjectBuilder::build_object( function($obj) use($user) {
 or 
 
 ```php
-$object = ObjectBuilder::build_object( function($obj) use($user) {
+$object = Object_Builder::build_object( function($obj) use($user) {
     $obj->target = [];
 
     $obj->name = $user->get_name();
