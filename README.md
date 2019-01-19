@@ -7,16 +7,14 @@ One direction serializers of complex objects using a simple DSL.
 [![Build Status](https://travis-ci.org/haijin-development/php-object-builder.svg?branch=v0.1.0)](https://travis-ci.org/haijin-development/php-object-builder)
 [![License](https://poser.pugx.org/haijin/object-builder/license)](https://packagist.org/packages/haijin/object-builder)
 
-### Version 0.1.0
-
-This is the pre-release of version v1.0.0.
+### Version 1.0.0
 
 If you like it a lot you may contribute by [financing](https://github.com/haijin-development/support-haijin-development) its development.
 
 ## Table of contents
 
 1. [Installation](#c-1)
-2. [ObjectBuilders](#c-2)
+2. [Object_Builders](#c-2)
     1. [Json_Builder](#c-2-1)
         1. [Standalone example](#c-2-1-1)
         2. [Integrating it to a class](#c-2-1-2)
@@ -35,7 +33,7 @@ Include this library in your project `composer.json` file:
 
     "require": {
         ...
-        "haijin/object-builder": "^0.1.0",
+        "haijin/object-builder": "^1.0",
         ...
     },
 
@@ -44,7 +42,7 @@ Include this library in your project `composer.json` file:
 ```
 
 <a name="c-2"></a>
-## ObjectBuilders
+## Object_Builders
 
 An Object_Builder is an object that serializes complex nested objects using simple DSL instead of configurations files or classes.
 
@@ -295,7 +293,7 @@ $obj->target = new User();
 Reuse common builders into Object_Builder subclasses:
 
 ```php
-class AddressBuilder extends Object_Builder
+class Address_Builder extends Object_Builder
 {
     public function evaluate($address)
     {
@@ -315,7 +313,7 @@ $object = Object_Builder::build_object( function($obj) use($user) {
     $obj->name = $user->get_name();
     $obj->last_name = $user->get_last_name();
 
-    $obj->address = $this->build_with( new AddressBuilder(), $user->get_address() );
+    $obj->address = $this->build_with( new Address_Builder(), $user->get_address() );
 });
 ```
 
@@ -328,7 +326,7 @@ $object = Object_Builder::build_object( function($obj) use($user) {
     $obj->name = $user->get_name();
     $obj->last_name = $user->get_last_name();
 
-    $obj->address = $this->build_with( "AddressBuilder", $user->get_address() );
+    $obj->address = $this->build_with( "Address_Builder", $user->get_address() );
 });
 ```
 
