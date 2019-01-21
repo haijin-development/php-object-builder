@@ -221,7 +221,7 @@ class Object_Builder implements \ArrayAccess
     
     public function offsetExists($offset)
     {
-        throw Create::a( \Exception::class )->with( "Unsupported operation" );
+        throw Create::an( \Exception::class )->with( "Unsupported operation" );
     }
 
     public function offsetGet($offset)
