@@ -2,6 +2,8 @@
 
 namespace Haijin\Object_Builder;
 
+use Haijin\Instantiator\Create;
+
 class Object_Builder implements \ArrayAccess
 {
     //// Class methods
@@ -32,7 +34,7 @@ class Object_Builder implements \ArrayAccess
      */
     static public function build_object(...$params)
     {
-        $builder = new self();
+        $builder = Create::a( self::class )->with();
 
         return $builder->build( ...$params );
     }
@@ -160,8 +162,8 @@ class Object_Builder implements \ArrayAccess
             $binding = $this->binding;
         }
 
-        $builder_class = get_class( $this );
-        $builder = new $builder_class();
+        $builder = Create::a( get_class( $this ) )->with();
+
         return $builder->_build(null, $value, $closure, $binding);
     }
 
@@ -176,7 +178,7 @@ class Object_Builder implements \ArrayAccess
     public function build_with($object_builder, ... $params)
     {
         if( is_string( $object_builder ) ) {
-            $object_builder = new $object_builder();
+            $object_builder = Create::a( $object_builder )->with();
         }
 
         $object_builder->evaluate( ... $params );
@@ -195,11 +197,6 @@ class Object_Builder implements \ArrayAccess
         return $this->target;
     }
 
-    //public function evaluate($param1, $param2, $etc)
-    //{
-    //    throw new \Exception( "This method must be implementd by subclasses acting as custom validators." );
-    //}
-
     /**
      * Creates and returns a Value_Holder wrapper on a value to later call a conversion method.
      *
@@ -217,14 +214,14 @@ class Object_Builder implements \ArrayAccess
      */
     public function convert( $value )
     {
-        return new Value_Holder( $value, $this );
+        return Create::a( Value_Holder::class )->with( $value, $this );
     }
 
     /// ArrayAccess implementation
     
     public function offsetExists($offset)
     {
-        throw new \Exception("Unsupported operation");
+        throw Create::a( \Exception::class )->with( "Unsupported operation" );
     }
 
     public function offsetGet($offset)

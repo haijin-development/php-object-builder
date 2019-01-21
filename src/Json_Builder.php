@@ -2,6 +2,8 @@
 
 namespace Haijin\Object_Builder;
 
+use Haijin\Instantiator\Create;
+
 /**
  * An Object_Builder subclass to build JSON objects.
  */
@@ -34,7 +36,7 @@ class Json_Builder extends Object_Builder
      */
     static public function build_json($closure, $binding = null)
     {
-        $builder = new self();
+        $builder = Create::a( self::class )->with();
 
         return $builder->build( $closure, $binding );
     }
