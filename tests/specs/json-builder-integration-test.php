@@ -74,21 +74,23 @@ class Action
     {
         $user = new User();
 
-        return $this->build_json_from($user);
+        return $this->build_json_from( $user );
     }
 
     protected function build_json_from($user)
     {
-        return Json_Builder::build_json( function($json) use($user) {
+        $json_builder = new Json_Builder();
+
+        return $json_builder->build( $user, function($json, $user) {
 
             $json->response = $this->success_response_to_json( $json, $user );
 
-        }, $this);
+        });
     }
 
     protected function success_response_to_json($json, $user)
     {
-        return $json->build( function($json) use ($user) {
+        return $json->build( $user, function($json, $user) {
 
             $json->api_version = "1.0.0";
 
@@ -102,14 +104,16 @@ class Action
 
     protected function user_to_json($json, $user)
     {
-        return $json->build( function($json) use($user) {
+        return $json->build( $user, function($json, $user) {
 
             $json->name = $user->get_name();
 
             $json->last_name = $user->get_last_name();
 
             $json->addresses = array_map(
-                function($each_address) use($json) { return $this->address_to_json( $json, $each_address ); },
+                function($each_address) use($json) {
+                    return $this->address_to_json( $json, $each_address );
+                },
                 $user->get_addresses()
             );
         });
@@ -117,11 +121,11 @@ class Action
 
     protected function address_to_json($json, $address)
     {
-        return $json->build( function($json) use($address) {
+        return $json->build( $address, function($json, $address) {
 
-            $json->street = $json->convert( $address->get_street() ) ->to_string();
+            $json->street = $json->to_string( $address->get_street() );
 
-            $json->number = $json->convert( $address->get_number() ) ->to_int();
+            $json->number = $json->to_int( $address->get_number() );
         });
     }
 }

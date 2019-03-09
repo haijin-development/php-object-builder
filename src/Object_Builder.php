@@ -2,57 +2,14 @@
 
 namespace Haijin\Object_Builder;
 
-use Haijin\Instantiator\Create;
+use Haijin\Ordered_Collection;
 
 class Object_Builder implements \ArrayAccess
 {
-    //// Class methods
-
-    /**
-     * Builds and returns a built object.
-     *
-     * Example:
-     *
-     *      $object = Object_Builder::build_object( function($obj) {
-     *          $obj->target = [];
-     *
-     *          $obj->name = "Lisa";
-     *          $obj->last_name = "Simpson";
-     *          $obj->address = $this->build( function($obj) {
-     *              $obj->target = [];
-     *
-     *              $obj->street_name = "Evergreen";
-     *              $obj->street_number = "742";
-     *          });
-     *      });
-     * 
-     * @param object $value An optional value to be the source of the target being built.
-     * @param callable $closure The building closure.
-     * @param object $binding Optional - an binding object for the closure evaluations.
-     *
-     * @return object The built object.
-     */
-    static public function build_object(...$params)
-    {
-        $builder = Create::a( self::class )->with();
-
-        return $builder->build( ...$params );
-    }
-
-    //// Instance methods
-
-    /**
-     * The binding to evaluate the closures. Defaults to this instance
-     */
-    protected $binding;
     /**
      * The object being built.
      */
     public $target;
-    /**
-     * An optional source to build the target.
-     */
-    public $value;
 
     /// Initializing
 
@@ -61,29 +18,13 @@ class Object_Builder implements \ArrayAccess
      */
     public function __construct()
     {
-        $this->binding = $this;
         $this->target = null;
-        $this->value = null;
     }
 
-    /// Accessors
+    /// Accessing
 
     /**
-     * Sets the default binding for the closure evaluations.
-     *
-     * @param object $binding An object to be the default binding for closure evaluations.
-     *
-     * @return Object_Builder Returns $this object.
-     */
-    public function set_binding($binding)
-    {
-        $this->binding = $binding;
-
-        return $this;
-    }
-
-    /**
-     * Gets the object being built.
+     * Gets the target object being built.
      *
      * @return object The object being built.
      */
@@ -93,13 +34,20 @@ class Object_Builder implements \ArrayAccess
     }
 
     /**
-     * Gets the optional source value for building the target.
-     *
-     * @return object Returns the optional building source value.
+     * Sets the target object being built.
      */
-    public function get_value()
+    public function set_target($object)
     {
-        return $this->value;
+        $this->target = $object;
+    }
+
+    /**
+     * Sets the target object being built.
+     * It's more expressive in some contexts.
+     */
+    public function set_to($object)
+    {
+        $this->set_target( $object );
     }
 
     /**
@@ -110,7 +58,9 @@ class Object_Builder implements \ArrayAccess
      */
     public function __set($name, $value)
     {
-        $this->target[ $name ] = $value;
+        $this->validate_target_object();
+
+        $this->target->$name = $value;
     }
 
     /**
@@ -123,105 +73,89 @@ class Object_Builder implements \ArrayAccess
      */
     public function __call($method_name, $params)
     {
+        $this->validate_target_object();
+
         return $this->target->$method_name( ... $params );
     }
 
     /// Converting DSL
 
     /**
-     * Evaluates a closure with the object building DSL.
+     * Creates a new Object_Builder and evaluates a callable DSL on it.
      *
      * Method signature
      *
-     *      public function build($optional_value, $closure, $optional_binding);
+     *      public function object(...$optional_values, $callable);
      *
-     * @param object $value Optional - A value to be set as the current value.
-     * @param callable $closure The closure with the building definition.
-     * @param object $binding Optional - An optional binding for the closure evaluation.
+     * @param object $optional_values Optional - 0 or more values to be 
+     *  used as the building sources (or models).
+     * @param callable $callable The callable with the building definition.
      *
      * @return object Returns the building target.
      */
-    public function build( ... $params )
+    public function build( ...$params )
     {
-        $params = \Haijin\Ordered_Collection::with_all( $params );
-        $value = null;
-        $closure = null;
-        $binding = null;
+        $new_builder = $this->new_builder_instance();
 
-        if( ! ( $params[0] instanceof \Closure ) ) {
-            $value = $params[0];
-            $closure = $params[1];
-        } else {
-            $value = $this->value;
-            $closure = $params[0];
-        }
-
-        if( ! ( $params[-1] instanceof \Closure ) && $params[-1] !== null ) {
-            $binding = $params[-1];
-        } else {
-            $binding = $this->binding;
-        }
-
-        $builder = Create::a( get_class( $this ) )->with();
-
-        return $builder->_build(null, $value, $closure, $binding);
+        return $new_builder->eval( ...$params );
     }
 
     /**
-     * Builds and returns an object using a custom Object_Builder class or instance.
+     * Evaluates a callable DSL in $this object.
      *
-     * @param string|Object_Builder $object_builder The class or instance of the Object_Builder.
-     * @param ... $params The list of parameters to pass along to the method call( ...$params ) of the Object_Builder.
+     * Method signature
      *
-     * @return object The build object.
+     *      public function object(...$optional_values, $callable);
+     *
+     * @param object $optional_values Optional - 0 or more values to be 
+     *  used as the building sources (or models).
+     * @param callable $callable The callable with the building definition.
+     *
+     * @return object Returns the building target.
      */
-    public function build_with($object_builder, ... $params)
+    public function eval(...$params)
     {
-        if( is_string( $object_builder ) ) {
-            $object_builder = Create::a( $object_builder )->with();
+        $params_count = count( $params );
+
+        $new_params = array_merge(
+            [ $this ],
+            array_slice( $params, 0, $params_count - 1 )
+        );
+
+        $callable = $params[ $params_count - 1 ];
+
+        if( is_string( $callable ) ) {
+            $callable = new $callable();
         }
 
-        $object_builder->evaluate( ... $params );
-
-        return $object_builder->target;
-    }
-
-    public function _build($target, $value, $closure, $binding)
-    {
-        $this->target = $target === null ? [] : $target;
-        $this->value = $value;
-        $this->binding = $binding;
-
-        $closure->call( $this->binding, $this );
+        $callable( ...$new_params );
 
         return $this->target;
     }
 
-    /**
-     * Creates and returns a Value_Holder wrapper on a value to later call a conversion method.
-     *
-     * Example:
-     *
-     *      $object = (new AppObjectBuilder() )->build( function($obj) use($user) {
-     *          $obj->target = [];
-     *
-     *          $obj->address = $this->convert( $user->get_address() ) ->to_address();
-     *      });
-     *
-     * @param object $value The value to be convereted.
-     *
-     * @return Value_Holder A wrapper that accepts conversion methods. See the example.
-     */
-    public function convert( $value )
+    /// Validating
+
+    protected function validate_target_object()
     {
-        return Create::a( Value_Holder::class )->with( $value, $this );
+        if( $this->target === null ) {
+            throw new \RuntimeException( "A target object must be set first with \$target->set_to( new Object() );" );
+        }
+    }
+
+    /// Creating instances
+
+    protected function new_builder_instance()
+    {
+        $subclass = get_class( $this );
+
+        return new $subclass();
     }
 
     /// ArrayAccess implementation
     
     public function offsetExists($offset)
     {
-        throw Create::an( \Exception::class )->with( "Unsupported operation" );
+        return isset( $this->target[ $offset ] );
     }
 
     public function offsetGet($offset)

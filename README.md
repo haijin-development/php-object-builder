@@ -7,7 +7,16 @@ One direction serializers of complex objects using a simple DSL.
 [![Build Status](https://travis-ci.org/haijin-development/php-object-builder.svg?branch=v0.1.0)](https://travis-ci.org/haijin-development/php-object-builder)
 [![License](https://poser.pugx.org/haijin/object-builder/license)](https://packagist.org/packages/haijin/object-builder)
 
-### Version 1.1.1
+**Highlights**
+
+* Zero configuration needed and conventions assumed. No naming conventions required. 
+* Json generation for an endpoint can be easily organized into many methods.
+* All json generation methods for each endpoint can reside in a single endpoint file.
+* Json generation methods can use native PHP conditionals and loops.
+* Type convertion methods can easily be defined and used as regular PHP class methods.
+* The mapping from the model to json does not need to be one to one. Some parts of the json response can be built from multiple models or from none without having to create new model classes.
+
+### Version 2.0.0
 
 If you like it a lot you may contribute by [financing](https://github.com/haijin-development/support-haijin-development) its development.
 
@@ -33,7 +42,7 @@ Include this library in your project `composer.json` file:
 
     "require": {
         ...
-        "haijin/object-builder": "^1.1",
+        "haijin/object-builder": "^2.0",
         ...
     },
 
@@ -59,18 +68,27 @@ An Object_Builder subclass that builds a JSON.
 <a name="c-2-1-1"></a>
 #### Standalone example
 
+Serialize a User object to a Json associative array:
+
 ```php
-$json_object = \Haijin\Object_Builder\Json_Builder::build_json( function($json) use($user) {
+use Haijin\Object_Builder\Json_Builder;
+
+$json_builder = new Json_Builder();
+
+$json_object = $json_builder->build( $user, function($json, $user) {
+
     $json->name = $user->get_name();
 
     $json->last_name = $user->get_last_name();
 
-    $address = $user->get_address();
-    $json->address = $this->build( function($json) use($address) {
+    $json->address = $json->build( $user->get_address(), function($json, $address) {
 
         $json->street = $address->get_street_name();
-        $json->number = $this->convert( $address->get_street_name() ) ->to_int();
+
+        $json->number = $json->to_int( $address->get_street_number() );
+
     });
+
 });
 ```
 
@@ -80,20 +98,12 @@ Sets a value to a field:
 
 ```php
 $json->name = $user->get_name();
-// or
-$json["name"] = $user->get_name();
 ```
 
-Assigns the user address to a variable to be able to pass it along to the closure below it:
+Uses a closure to create a new json object from an Address model and assigns it to the address field:
 
 ```php
-$address = $user->get_address();
-```
-
-Uses a closure to create a new json object and assigns it to the address field:
-
-```php
-$json->address = $this->build( function($json) use($address) {
+$json->address = $json->build( $user->get_address(), function($json, $address) {
     // ...
 });
 ```
@@ -101,7 +111,7 @@ $json->address = $this->build( function($json) use($address) {
 This line is an expressive way of converting a value to an int:
 
 ```php
-$json->number = $this->convert( $address->get_street_name() ) ->to_int();
+$json->number = $this->to_int( $address->get_street_number() );
 ```
 
 It's optional, a simple:
@@ -113,7 +123,7 @@ $json->number = (int) $address->get_street_name();
 produces the same result, but with more complex custom convertions that form gains in expressiveness.
 
 <a name="c-2-1-2"></a>
-#### Integrating it to a class
+#### Integrating it to an endpoint class
 
 Given the model classes
 
@@ -150,7 +160,7 @@ class SampleUser
 }
 ```
 
-And an Action class that serializes a SampleUser object to produce the response
+And an Endpoint class that serializes a SampleUser object to produce the response
 
 ```php
 [
@@ -178,31 +188,40 @@ integrate the Json_Builder and factorize its building block like this:
 ```php
 use Haijin\Object_Builder\Json_Builder;
 
-class Action
+class Endpoint
 {
-    public function get_json()
+    public function handle_request()
     {
-        // Get a sample model object.
-        $user = new SampleUser();
+        $user = new User();
 
-        // Build the JSON response from the model object.
-        return $this->build_json_from($user);
+        return $this->build_json_from( $user );
     }
 
     protected function build_json_from($user)
     {
-        return Json_Builder::build_json( function($json) use($user) {
+        $json_builder = new Json_Builder();
 
-            $json->response = $this->success_response_to_json( $json, $user );
+        return $json_builder->build( $user, function($json, $user) {
 
-        }, $this);
+            if( $this->successful_request() ) {
+
+                $json->response = 
+                    $this->success_response_to_json( $json, $user );
+
+            } else {
+
+                $json->response = 
+                    $this->failed_response_to_json( $json, $this->get_errors() );
+            }
+
+            $json->response->api_version = "1.0.0";
+
+        });
     }
 
     protected function success_response_to_json($json, $user)
     {
-        return $json->build( function($json) use ($user) {
-
-            $json->api_version = "1.0.0";
+        return $json->build( $user, function($json, $user) {
 
             $json->success = true;
 
@@ -214,47 +233,41 @@ class Action
 
     protected function user_to_json($json, $user)
     {
-        return $json->build( function($json) use($user) {
+        return $json->build( $user, function($json, $user) {
 
             $json->name = $user->get_name();
 
             $json->last_name = $user->get_last_name();
 
-            $json->addresses = array_map(
-                function($each_address) use($json) { return $this->address_to_json( $json, $each_address ); },
-                $user->get_addresses()
-            );
+            $json->addresses = [];
+
+            foreach( $user->get_addresses() as $address ) {
+                $json->addresses[] = $this->address_to_json( $json, $address );
+            }
+
         });
     }
 
     protected function address_to_json($json, $address)
     {
-        return $json->build( function($json) use($address) {
+        return $json->build( $address, function($json, $address) {
 
-            $json->street = $json->convert( $address->get_street() ) ->to_string();
+            $json->street = $json->to_string( $address->get_street() );
 
-            $json->number = $json->convert( $address->get_number() ) ->to_int();
+            $json->number = $json->to_int( $address->get_number() );
         });
     }
-}
-```
 
-**Remarks**
+    protected function failed_response_to_json($json, $errors)
+    {
+        return $json->build( $user, function($json, $user) {
 
-In this method call, note the last parameter to the `build_json` call.
+            $json->success = false;
 
-`$this` is passed as the last parameter to bind it to the `Action` object in all the closure evaluations.
+            $json->errors = $json->build( $errors, Response_Errors_Builder::class );
 
-If this last parameter was not passed, inside the closures `$this` would point to the Object_Builder object and not to the Action object, and calling other methods in the Action class would produce an error.
-
-```php
-protected function build_json_from($user)
-{
-    return Json_Builder::build_json( function($json) use($user) {
-
-        $json->response = $this->success_response_to_json( $json, $user );
-
-    }, $this);
+        }) ;
+    }
 }
 ```
 
@@ -264,69 +277,94 @@ protected function build_json_from($user)
 Build objects of any class by defining the appropiate `target` and using its own protocol:
 
 ```php
-$user = Object_Builder::build_object( function($obj) {
-    $obj->target = new User();
+use Haijin\Object_Builder\Json_Builder;
+
+$object_builder = new Object_Builder();
+
+$user = $object_builder->build( function($obj) {
+
+    $obj->set_to( new User() );
 
     $obj->set_name( "Lisa" );
+
     $obj->set_last_name( "Simpson" );
 
     $obj->set_address(
+
         $this->build( function($obj) {
-            $obj->target = new Address();
+
+            $obj->set_to( new Address() );
             
             $obj->set_street( "Evergreen" );
+
             $obj->set_number( 742 );
-        }) 
-);
+
+        });
+
+    );
+
+});
 ```
 **Remarks**
 
-This first line of each building closure creates the array or object which is later populated:
+This first line of each building closure creates the object, array or value which is later populated:
 
 ```php
-$obj->target = new User();
+$obj->set_to( new User() );
+$obj->set_to( [] );
 ```
 
 <a name="c-2-3"></a>
 ### Reusing builders
 
-Reuse common builders into Object_Builder subclasses:
+Reuse common builders into callable classes:
 
 ```php
-class Address_Builder extends Object_Builder
+class Address_Builder
 {
-    public function evaluate($address)
+    public function __invoke($address)
     {
-        $this->target = [];
+        $address->set_to( [] );
 
-        $this->street = $address->get_street_name() . " " . $address->get_street_number();
+        $address->street =
+            $address->get_street_name() . " " . $address->get_street_number();
     }
 }
 ```
 
-and use them:
+and use it:
 
 ```php
-$object = Object_Builder::build_object( function($obj) use($user) {
-    $obj->target = [];
+$object_builder = new Object_Builder();
+
+$object = $object_builder->build( $user, function($obj, $user) {
+
+    $obj->set_to( [] );
 
     $obj->name = $user->get_name();
+
     $obj->last_name = $user->get_last_name();
 
-    $obj->address = $this->build_with( new Address_Builder(), $user->get_address() );
+    $obj->address = $this->build_with( $user->get_address(), new Address_Builder() );
+
 });
 ```
 
 or 
 
 ```php
-$object = Object_Builder::build_object( function($obj) use($user) {
-    $obj->target = [];
+$object_builder = new Object_Builder();
+
+$object = $object_builder->build( $user, function($obj, $user) {
+
+    $obj->set_to( [] );
 
     $obj->name = $user->get_name();
+
     $obj->last_name = $user->get_last_name();
 
-    $obj->address = $this->build_with( "Address_Builder", $user->get_address() );
+    $obj->address = $this->build_with( $user->get_address(), Address_Builder::class );
+
 });
 ```
 

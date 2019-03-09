@@ -4,10 +4,18 @@ use Haijin\Object_Builder\Object_Builder;
 
 $spec->describe( "When building arrays", function() {
 
+    $this->let( "object_builder", function() {
+
+        return new Object_Builder();
+
+    });
+
     $this->it( "builds an empty array", function() {
 
-        $array = Object_Builder::build_object( function($array) {
-            $array->target = [];
+        $array = $this->object_builder->build( function($array) {
+
+            $array->set_to( [] );
+
         });
 
         $this->expect( $array ) ->to() ->equal( [] );
@@ -16,11 +24,14 @@ $spec->describe( "When building arrays", function() {
 
     $this->it( "adds items to the array", function() {
 
-        $array = Object_Builder::build_object( function($array) {
-            $array->target = [];
+        $array = $this->object_builder->build( function($array) {
+
+            $array->set_to( [] );
 
             $array[] = "Lisa";
+
             $array[] = "Simpson";
+
         });
 
         $this->expect( $array ) ->to() ->be() ->exactly_like([
@@ -32,17 +43,24 @@ $spec->describe( "When building arrays", function() {
 
     $this->it( "builds nested arrays", function() {
 
-        $array = Object_Builder::build_object( function($array) {
-            $array->target = [];
+        $array = $this->object_builder->build( function($array) {
+
+            $array->set_to( [] );
 
             $array[] = "Lisa";
+
             $array[] = "Simpson";
-            $array[] = $this->build( function($array) {
-                $array->target = [];
+
+            $array[] = $array->build( function($array) {
+
+                $array->set_to( [] );
 
                 $array[] = "Evergreen";
+
                 $array[] = "742";
+
             });
+
         });
 
         $this->expect( $array ) ->to() ->be() ->exactly_like([
@@ -65,21 +83,27 @@ $spec->describe( "When building arrays", function() {
             ]
         ];
 
-        $array = Object_Builder::build_object( function($array) use($user) {
-            $array->target = [];
+        $array = $this->object_builder->build( $user, function($array, $user) {
+
+            $array->set_to( [] );
 
             $array[] = $user[ "name" ];
+
             $array[] = $user[ "last_name" ];
 
-            $address = $user[ "address" ];
-            $array[] = $this->build( function($array) use($address) {
-                $array->target = [];
+            $array[] = $array->build( $user[ "address" ],
+                                                function($array, $address) {
+
+                $array->set_to( [] );
 
                 $parts = explode(" ", $address[ "street" ]);
 
                 $array[] = $parts[ 0 ];
+
                 $array[] = $parts[ 1 ];
+
             });
+
         });
 
         $this->expect( $array ) ->to() ->be() ->exactly_like([

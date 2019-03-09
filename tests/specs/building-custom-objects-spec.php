@@ -6,17 +6,24 @@ use Haijin\Object_Builder\Object_Builder;
 
 $spec->describe( "When building custom objects", function() {
 
+    $this->let( "object_builder", function() {
+
+        return new Object_Builder();
+
+    });
+
     $this->it( "builds the object with an Object_Builder instance", function() {
 
         $source = [ "Lisa", "Simpson", [ "Evergreen", "742" ] ];
 
-        $object = Object_Builder::build_object( function($obj) use($source) {
-            $obj->target = [];
+        $object = $this->object_builder->build( $source, function($obj, $source) {
+
+            $obj->set_to( new \stdclass() );
 
             $obj->name = "Lisa";
             $obj->last_name = "Simpson";
 
-            $obj->address = $this->build_with( new Address_Builder(), $source[2] );
+            $obj->address = $obj->build( $source[2], new Address_Builder_Callable() );
         });
 
         $this->expect( $object ) ->to() ->be() ->exactly_like([
@@ -33,13 +40,16 @@ $spec->describe( "When building custom objects", function() {
 
         $source = [ "Lisa", "Simpson", [ "Evergreen", "742" ] ];
 
-        $object = Object_Builder::build_object( function($obj) use($source) {
-            $obj->target = [];
+        $object = $this->object_builder->build( $source, function($obj, $source) {
+
+            $obj->set_to( new \stdclass() );
 
             $obj->name = "Lisa";
+
             $obj->last_name = "Simpson";
 
-            $obj->address = $this->build_with( "Custom_Object_Builders_Spec\Address_Builder", $source[2] );
+            $obj->address = $obj->build( $source[2], Address_Builder_Callable::class );
+
         });
 
         $this->expect( $object ) ->to() ->be() ->exactly_like([
@@ -56,13 +66,18 @@ $spec->describe( "When building custom objects", function() {
 
         $source = [ "Lisa", "Simpson", [ "Evergreen", "742" ] ];
 
-        $object = (new App_Object_Builder() )->build( function($obj) use($source) {
-            $obj->target = [];
+        $custom_object_builder = new Custom_Object_Builder();
+
+        $object = $custom_object_builder->build( $source, function($obj, $source) {
+
+            $obj->set_to( new \stdclass() );
 
             $obj->name = "Lisa";
+
             $obj->last_name = "Simpson";
 
-            $obj->address = $this->convert( $source[2] ) ->to_address();
+            $obj->address = $obj->to_address( $source[2] );
+
         });
 
         $this->expect( $object ) ->to() ->be() ->exactly_like([
@@ -77,24 +92,36 @@ $spec->describe( "When building custom objects", function() {
 
 });
 
-class Address_Builder extends Object_Builder
+class Address_Builder_Callable
 {
-    public function evaluate($source)
+    public function __invoke($address, $source)
     {
-        $this->target = [];
+        $address->set_to( new \stdclass() );
 
-        $this->street = $source[ 0 ] . " " . $source[ 1 ];
+        $address->street = $source[ 0 ] . " " . $source[ 1 ];
     }
 }
 
-class App_Object_Builder extends Object_Builder
+class Address_Builder
+{
+    public function __invoke($address, $source)
+    {
+        $address->set_to( new \stdclass() );
+
+        $address->street = $source[ 0 ] . " " . $source[ 1 ];
+    }
+}
+
+class Custom_Object_Builder extends Object_Builder
 {
     public function to_address( $source )
     {
-        return $this->build( function($obj) use($source) {
-            $obj->target = [];
+        return $this->build( $source, function($address, $source) {
 
-            $obj->street = $source[ 0 ] . " " . $source[ 1 ];
+            $address->set_to( new \stdclass() );
+
+            $address->street = $source[ 0 ] . " " . $source[ 1 ];
+
         });
     }
 }

@@ -6,10 +6,18 @@ use Haijin\Object_Builder\Object_Builder;
 
 $spec->describe( "When building objects", function() {
 
+    $this->let( "object_builder", function() {
+
+        return new Object_Builder();
+
+    });
+
     $this->it( "builds an empty object", function() {
 
-        $user = Object_Builder::build_object( function($obj) {
-            $obj->target = new User();
+        $user = $this->object_builder->build( function($obj) {
+
+            $obj->set_to( new User() );
+
         });
 
         $this->expect( $user ) ->to() ->be() ->a( 'Building_Objects_Spec\User' );
@@ -18,11 +26,14 @@ $spec->describe( "When building objects", function() {
 
     $this->it( "adds attributes to the built object", function() {
 
-        $user = Object_Builder::build_object( function($obj) {
-            $obj->target = new User();
+        $user = $this->object_builder->build( function($user) {
 
-            $obj->set_name( "Lisa" );
-            $obj->set_last_name( "Simpson" );
+            $user->set_to( new User() );
+
+            $user->set_name( "Lisa" );
+
+            $user->set_last_name( "Simpson" );
+
         });
 
         $this->expect( $user ) ->to() ->be() ->exactly_like([
@@ -34,20 +45,28 @@ $spec->describe( "When building objects", function() {
 
     $this->it( "adds nested attributes to the built object", function() {
 
-        $user = Object_Builder::build_object( function($obj) {
-            $obj->target = new User();
+        $user = $this->object_builder->build( function($user) {
 
-            $obj->set_name( "Lisa" );
-            $obj->set_last_name( "Simpson" );
+            $user->set_to( new User() );
 
-            $obj->set_address(
-                $this->build( function($obj) {
-                    $obj->target = new Address();
+            $user->set_name( "Lisa" );
+
+            $user->set_last_name( "Simpson" );
+
+            $user->set_address(
+
+                $user->build( function($address) {
+
+                    $address->set_to( new Address() );
                     
-                    $obj->set_street( "Evergreen" );
-                    $obj->set_number( 742 );
+                    $address->set_street( "Evergreen" );
+
+                    $address->set_number( 742 );
+
                 }) 
+
             );
+
         });
 
         $this->expect( $user ) ->to() ->be() ->exactly_like([
