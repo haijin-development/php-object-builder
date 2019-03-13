@@ -138,7 +138,7 @@ class Object_Builder implements \ArrayAccess
     protected function validate_target_object()
     {
         if( $this->target === null ) {
-            throw new \RuntimeException( "A target object must be set first with \$target->set_to( new Object() );" );
+            throw new Haijin_Error( "A target object must be set first with \$target->set_to( new Object() );" );
         }
     }
 
