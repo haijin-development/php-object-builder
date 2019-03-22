@@ -3,6 +3,7 @@
 namespace Haijin\Object_Builder;
 
 use Haijin\Ordered_Collection;
+use Haijin\Errors\Haijin_Error;
 
 class Object_Builder implements \ArrayAccess
 {
@@ -155,16 +156,22 @@ class Object_Builder implements \ArrayAccess
     
     public function offsetExists($offset)
     {
+        $this->validate_target_object();
+
         return isset( $this->target[ $offset ] );
     }
 
     public function offsetGet($offset)
     {
+        $this->validate_target_object();
+
         return $this->target[ $offset ];
     }
 
     public function offsetSet($offset, $value)
     {
+        $this->validate_target_object();
+
         if( $offset === null ) {
             $offset = count( $this->target );
         }
@@ -174,6 +181,8 @@ class Object_Builder implements \ArrayAccess
 
     public function offsetUnset($offset)
     {
+        $this->validate_target_object();
+
         unset( $this->target[ $offset ] );
     }
 }

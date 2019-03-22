@@ -1,6 +1,7 @@
 <?php
 
 use Haijin\Object_Builder\Object_Builder;
+use Haijin\Errors\Haijin_Error;
 
 $spec->describe( "When building arrays", function() {
 
@@ -113,6 +114,54 @@ $spec->describe( "When building arrays", function() {
                 "Evergreen", "742"
             ] 
         ]);
+
+    });
+
+    $this->describe( 'when using the ArrayAccess protocol', function() {
+
+        $this->it( 'set a value', function() {
+
+            $array = $this->object_builder->build( null, function($array, $user) {
+
+                $array->set_to( [] );
+
+                $array[ 'user' ] = 'Lisa';
+
+            });
+
+            $this->expect( $array[ 'user' ] ) ->to() ->equal( 'Lisa' );
+
+        });
+
+        $this->it( 'gets a value', function() {
+
+            $array = $this->object_builder->build( null, function($array, $user) {
+
+                $array->set_to( [] );
+
+                $array[ 'user' ] = 'Lisa';
+
+                $this->expect( $array[ 'user' ] ) ->to() ->equal( 'Lisa' );
+
+            });
+
+        });
+
+        $this->it( 'unsets a value and test for presence', function() {
+
+            $array = $this->object_builder->build( null, function($array, $user) {
+
+                $array->set_to( [] );
+
+                $array[ 'user' ] = 'Lisa';
+
+                unset( $array[ 'user' ] );
+
+                $this->expect( isset( $array[ 'user' ] ) ) ->to() ->be() ->false();
+
+            });
+
+        });
 
     });
 
