@@ -1,11 +1,10 @@
 <?php
 
-namespace Haijin\Object_Builder;
+namespace Haijin\ObjectBuilder;
 
-use Haijin\Ordered_Collection;
-use Haijin\Errors\Haijin_Error;
+use Haijin\Errors\HaijinError;
 
-class Object_Builder implements \ArrayAccess
+class ObjectBuilder implements \ArrayAccess
 {
     /**
      * The object being built.
@@ -15,7 +14,7 @@ class Object_Builder implements \ArrayAccess
     /// Initializing
 
     /**
-     * Initializes this Object_Builder.
+     * Initializes this ObjectBuilder.
      */
     public function __construct()
     {
@@ -29,7 +28,7 @@ class Object_Builder implements \ArrayAccess
      *
      * @return object The object being built.
      */
-    public function get_target()
+    public function getTarget()
     {
         return $this->target;
     }
@@ -37,7 +36,7 @@ class Object_Builder implements \ArrayAccess
     /**
      * Sets the target object being built.
      */
-    public function set_target($object)
+    public function setTarget($object)
     {
         $this->target = $object;
     }
@@ -46,9 +45,9 @@ class Object_Builder implements \ArrayAccess
      * Sets the target object being built.
      * It's more expressive in some contexts.
      */
-    public function set_to($object)
+    public function setTo($object)
     {
-        $this->set_target( $object );
+        $this->setTarget($object);
     }
 
     /**
@@ -59,7 +58,7 @@ class Object_Builder implements \ArrayAccess
      */
     public function __set($name, $value)
     {
-        $this->validate_target_object();
+        $this->validateTargetObject();
 
         $this->target->$name = $value;
     }
@@ -67,38 +66,38 @@ class Object_Builder implements \ArrayAccess
     /**
      * Delegates the call of a method to the target object being built.
      *
-     * @param string $method_name The name of the method.
+     * @param string $methodName The name of the method.
      * @param array $params The parameters of the method call.
      *
      * @return object Returns the result of calling the method to the target object.
      */
-    public function __call($method_name, $params)
+    public function __call($methodName, $params)
     {
-        $this->validate_target_object();
+        $this->validateTargetObject();
 
-        return $this->target->$method_name( ... $params );
+        return $this->target->$methodName(... $params);
     }
 
     /// Converting DSL
 
     /**
-     * Creates a new Object_Builder and evaluates a callable DSL on it.
+     * Creates a new ObjectBuilder and evaluates a callable DSL on it.
      *
      * Method signature
      *
-     *      public function object(...$optional_values, $callable);
+     *      public function object(...$optionalValues, $callable);
      *
-     * @param object $optional_values Optional - 0 or more values to be 
+     * @param object $optionalValues Optional - 0 or more values to be
      *  used as the building sources (or models).
      * @param callable $callable The callable with the building definition.
      *
      * @return object Returns the building target.
      */
-    public function build( ...$params )
+    public function build(...$params)
     {
-        $new_builder = $this->new_builder_instance();
+        $newBuilder = $this->newBuilderInstance();
 
-        return $new_builder->eval( ...$params );
+        return $newBuilder->eval(...$params);
     }
 
     /**
@@ -106,9 +105,9 @@ class Object_Builder implements \ArrayAccess
      *
      * Method signature
      *
-     *      public function object(...$optional_values, $callable);
+     *      public function object(...$optionalValues, $callable);
      *
-     * @param object $optional_values Optional - 0 or more values to be 
+     * @param object $optionalValues Optional - 0 or more values to be
      *  used as the building sources (or models).
      * @param callable $callable The callable with the building definition.
      *
@@ -116,73 +115,73 @@ class Object_Builder implements \ArrayAccess
      */
     public function eval(...$params)
     {
-        $params_count = count( $params );
+        $paramsCount = count($params);
 
-        $new_params = array_merge(
-            [ $this ],
-            array_slice( $params, 0, $params_count - 1 )
+        $newParams = array_merge(
+            [$this],
+            array_slice($params, 0, $paramsCount - 1)
         );
 
-        $callable = $params[ $params_count - 1 ];
+        $callable = $params[$paramsCount - 1];
 
-        if( is_string( $callable ) ) {
+        if (is_string($callable)) {
             $callable = new $callable();
         }
 
-        $callable( ...$new_params );
+        $callable(...$newParams);
 
         return $this->target;
     }
 
     /// Validating
 
-    protected function validate_target_object()
+    protected function validateTargetObject()
     {
-        if( $this->target === null ) {
-            throw new Haijin_Error( "A target object must be set first with \$target->set_to( new Object() );" );
+        if ($this->target === null) {
+            throw new HaijinError("A target object must be set first with \$target->setTo( new Object() );");
         }
     }
 
     /// Creating instances
 
-    protected function new_builder_instance()
+    protected function newBuilderInstance()
     {
-        $subclass = get_class( $this );
+        $subclass = get_class($this);
 
         return new $subclass();
     }
 
     /// ArrayAccess implementation
-    
+
     public function offsetExists($offset)
     {
-        $this->validate_target_object();
+        $this->validateTargetObject();
 
-        return isset( $this->target[ $offset ] );
+        return isset($this->target[$offset]);
     }
 
     public function offsetGet($offset)
     {
-        $this->validate_target_object();
+        $this->validateTargetObject();
 
-        return $this->target[ $offset ];
+        return $this->target[$offset];
     }
 
     public function offsetSet($offset, $value)
     {
-        $this->validate_target_object();
+        $this->validateTargetObject();
 
-        if( $offset === null ) {
-            $offset = count( $this->target );
+        if ($offset === null) {
+            $offset = count($this->target);
         }
 
-        $this->target[ $offset ] = $value;
+        $this->target[$offset] = $value;
     }
 
     public function offsetUnset($offset)
     {
-        $this->validate_target_object();
+        $this->validateTargetObject();
 
-        unset( $this->target[ $offset ] );
+        unset($this->target[$offset]);
     }
 }

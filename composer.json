@@ -1,48 +1,55 @@
 {
-    "minumum-stability": "dev",
-    "name": "haijin/object-builder",
-    "description": "One direction serializers for complex objects using a simple DSL.",
-    "keywords": ["serializer", "converter", "json"],
-    "type": "library",
-    "license": "MIT",
-    "homepage": "https://github.com/haijin-development/php-object-builder",
-    "authors": [
-        {
-            "name": "Haijin Development",
-            "email": "haijin.develpment@gmail.com",
-            "homepage": "https://github.com/haijin-development",
-            "role": "developer"
-        }
-    ],
-    "repositories": {
-        "haijin/specs": {
-            "type": "path",
-            "url": "../php-specs",
-            "options": {
-            "symlink": true
-            }
-        },
-        "haijin/tools": {
-            "type": "path",
-            "url": "../php-tools",
-            "options": {
-            "symlink": true
-            }
-        }
-    },
-    "require": {
-        "php": ">=7.1.0",
-        "haijin/tools": "dev-development"
-    },
-    "require-dev": {
-        "haijin/specs": "dev-development"
-    },
-    "autoload": {
-        "psr-4": {
-            "Haijin\\Object_Builder\\": ["src/"]
-        }
-    },
-    "scripts": {
-        "specs": "php ./vendor/bin/specs"
+  "minumum-stability": "dev",
+  "name": "haijin/object-builder",
+  "description": "One direction serializers for complex objects using a simple DSL.",
+  "keywords": [
+    "serializer",
+    "converter",
+    "json"
+  ],
+  "type": "library",
+  "license": "MIT",
+  "homepage": "https://github.com/haijin-development/php-object-builder",
+  "authors": [
+    {
+      "name": "Haijin Development",
+      "email": "haijin.develpment@gmail.com",
+      "homepage": "https://github.com/haijin-development",
+      "role": "developer"
     }
+  ],
+  "repositories": {
+    "haijin/specs": {
+      "type": "path",
+      "url": "../php-specs",
+      "options": {
+        "symlink": true
+      }
+    },
+    "haijin/tools": {
+      "type": "path",
+      "url": "../php-tools",
+      "options": {
+        "symlink": true
+      }
+    }
+  },
+  "require": {
+    "php": ">=7.1.0",
+    "haijin/tools": "dev-development"
+  },
+  "require-dev": {
+    "haijin/specs": "dev-development",
+    "phpunit/php-code-coverage": "^7.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Haijin\\ObjectBuilder\\": [
+        "src/"
+      ]
+    }
+  },
+  "scripts": {
+    "specs": "php ./vendor/bin/specs"
+  }
 }

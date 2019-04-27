@@ -1,17 +1,17 @@
 <?php
 
-namespace Haijin\Object_Builder;
+namespace Haijin\ObjectBuilder;
 
 /**
- * An Object_Builder subclass to build JSON objects.
+ * An ObjectBuilder subclass to build JSON objects.
  */
-class Json_Builder extends Object_Builder
+class JsonBuilder extends ObjectBuilder
 {
     public function eval(...$params)
     {
-        $this->set_target( new \stdclass() );
+        $this->setTarget(new \stdclass());
 
-        return parent::eval( ...$params );
+        return parent::eval(...$params);
     }
 
     /// Converters
@@ -21,19 +21,19 @@ class Json_Builder extends Object_Builder
      *
      * Example:
      *
-     *      $json = Json_Builder::->build_json( function($json) {
+     *      $json = JsonBuilder::->buildJson( function($json) {
      *          $json->target = [];
      *
-     *          $json->number = $json->to_int( "123" );
+     *          $json->number = $json->toInt( "123" );
      *      });
      *
      * @param object $value The value to convert to an integer.
      *
      * @return int The value converted to an integer.
      */
-    public function to_int( $value )
+    public function toInt($value)
     {
-        return (int) $value;
+        return (int)$value;
     }
 
     /**
@@ -41,18 +41,18 @@ class Json_Builder extends Object_Builder
      *
      * Example:
      *
-     *      $json = Json_Builder::->build_json( function($json) {
+     *      $json = JsonBuilder::->buildJson( function($json) {
      *          $json->target = [];
      *
-     *          $json->number = $json->to_string( 123 );
+     *          $json->number = $json->toString( 123 );
      *      });
      *
      * @param object $value The value to convert to a string.
      *
      * @return string The value converted to a string.
      */
-    public function to_string( $value )
+    public function toString($value)
     {
-        return (string) $value;
+        return (string)$value;
     }
 }
